@@ -1,0 +1,3 @@
+Welcome to the Tulsa Java Open Source Chess Project.
+Please see http://www.tulsajava.com
+ 
