@@ -1,0 +1,295 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>TJUG Chess</title>
+   <script src="js/jquery-1.4.4.js"></script>
+   <style>
+      .red{
+            font-family : sans-serif;
+            cursor: hand;
+            font-size: 8pt;
+	         cursor: hand;
+	         width:  64px;
+	         height: 64px;
+	         text-align: center;
+	         vertical-align: middle;
+	         background-color: #FF0000;
+	         color: white;
+         }
+         .black{
+            font-family : sans-serif;
+            font-size: 8pt;
+            cursor: hand;
+            width:  48px;
+            height: 48px;
+            text-align: center;
+            vertical-align: middle;
+            background-color: #000000;
+            color: white;
+         }
+         
+         .button{
+            width: 80px;
+            font-size: 8pt;
+         }
+         
+   </style>
+   <script>
+      function setBoard(board){
+         var alpha = ["A", "B", "C", "D", "E", "F", "G", "H"];
+         var rows = board.split("*");
+         for (var i=0; i<rows.length; i++){
+        	    var columns = rows[i].split("|");
+        	    for (var j=0; j<columns.length; j++){
+	             var theId = "td[id='"+alpha[j]+":"+i+"']";
+	             $(theId).html(columns[j]);
+        	    }
+         }
+
+         $("td[id="+$("#origin").val()+"]").css("font-weight", "normal");
+         $("#origin").val("");
+         $("#destination").val("");
+
+      }
+
+      function clicked(squareId, event){
+    	  if (event.ctrlKey){
+           $("#destination").val(squareId);
+    	  }else{
+    		  $("td[id="+$("#origin").val()+"]").css("font-weight", "normal");
+           $("#origin").val(squareId);
+           $("td[id="+squareId+"]").css("font-weight", "bolder");
+    	  }
+      }
+      
+      function resetGame(){
+          var strUrl = "rest/chess/resetGame/" + $("#id").val() + "/"; 
+          
+          var gameId = $.ajax({
+                 async: false, 
+                 url: strUrl,
+                 success: function(board){
+                     setBoard(board);
+                  },
+                 error: function(xhr,err,e){ alert( "Error: " + err ); }
+            }).responseText;
+          
+          $("#origin").val("");
+          $("#destination").val("");
+      }
+      
+      function createGame(){
+          var strUrl = "rest/chess/createGame/" + $("#id").val() + "/"; 
+          
+          asyncGameMessage(strUrl);
+          
+          $("#origin").val("");
+          $("#destination").val("");
+      }
+      
+      function redrawGame(){
+          var strUrl = "rest/chess/redrawGame/" + $("#id").val() + "/"; 
+          
+          asyncGameMessage(strUrl);
+          
+          $("#origin").val("");
+          $("#destination").val("");
+      }
+      
+      function sendMove(){
+          var strUrl = "rest/chess/makeMove/" + $("#id").val() + "/" + $("#origin").val() + "-" + $("#destination").val() + "/"; 
+          asyncGameMessage(strUrl);
+          
+          getCurrentGames();
+          return;
+      }
+      
+      function syncGameMessage(strUrl){
+          // synchronous ajax call ...
+          var returnData = $.ajax({
+                 async: false, 
+                 url: strUrl,
+                 success: function(board){
+                     setBoard(board);
+                  },
+                 error: function(xhr,err,e){ alert( "Error: " + err ); }
+            }).responseText;
+          
+            return returnData;
+      }
+      
+      function asyncGameMessage(strUrl){
+          // asynchronous ajax call ...
+          $.ajax({
+                 url: strUrl,
+                 success: function(board){
+                     setBoard(board);
+                  },
+                 error: function(xhr,err,e){ alert( "Error: " + err ); }
+            });
+          
+            return;
+      }
+      
+      function getCurrentGames(){
+          // asynchronous ajax call ...
+          $.ajax({
+                 url: "rest/chess/games",
+                 success: function(games){
+                     $("#currentGames").html(games);
+                  },
+                 error: function(xhr,err,e){ alert( "Error: " + err ); }
+            });
+          
+            return;
+      }
+   </script>
+</head>
+<body id="body">
+<table cellspacing="0" cellpadding"0">
+   <tr>
+      <td style="width:300px;">
+         Id: <input type="text" id="id" value="" />
+         <br/>
+         <input type="text" id="origin" style="width: 30px;" value="" />&nbsp;<input type="text" id="destination" style="width: 30px;" value="" />
+         <br/>
+         <input type="button" class="button" onclick="createGame()" value="Create Game" />
+         <br/>
+         <input type="button" class="button" onclick="sendMove()" value="Send Move" />
+         <br/>
+			<input type="button" class="button" onclick="resetGame()" value="Reset Game" />
+         <br/>
+         <input type="button" class="button" onclick="redrawGame()" value="Redraw" />
+         <br/>
+         <input type="button" onclick="moreMovesClicked();" value="Moves" /><div id="movesStatus"></div>
+         <div id="moves" style="margin: 10px;">Say</div>
+         Current Games
+         <div id="currentGames"></div>
+
+        <SCRIPT TYPE="text/javascript">
+            var moreMoves = false;
+            var i =0;
+            function moreMovesClicked(){
+            	moreMoves = !moreMoves;
+            	if (moreMoves){
+                  $("#movesStatus").html("on");
+            		getMoves(); 
+            	}else{
+            		$("#movesStatus").html("off");
+            	}
+            }
+            
+            function getMoves(){
+            	$("#body").css("cursor", "default");
+                            	 
+                $("#movesStatus").html("processing");
+            	 $.ajax({
+                	url: "moves?html=on",
+                	beforeSend: function(){
+                        $("#body").css("cursor", "auto");
+                	},
+                  success: function(moves){
+                        $("#moves").html(moves);
+                        $("#movesStatus").html("complete");
+                  },
+                  complete: function(data){ 
+                      $("#body").css("cursor", "progress");
+                      if (moreMoves){
+                          getMoves();
+                      }
+                  },
+                  error: function(xhr,err,e){  $("#movesStatus").html("error : " + e + "  " + err);}
+               });
+            }
+        </SCRIPT>         
+         
+      </td>
+      <td>
+         <table cellspacing="0" cellpadding"0">
+			   <tr>
+			      <td id="A:0" onclick="clicked(this.id, event);" class="black"> &nbsp; </td>
+			      <td id="B:0" onclick="clicked(this.id, event);" class="red"> &nbsp; </td>
+			      <td id="C:0" onclick="clicked(this.id, event);" class="black"> &nbsp; </td>
+			      <td id="D:0" onclick="clicked(this.id, event);" class="red"> &nbsp; </td>
+			      <td id="E:0" onclick="clicked(this.id, event);" class="black"> &nbsp; </td>
+			      <td id="F:0" onclick="clicked(this.id, event);" class="red"> &nbsp; </td>
+			      <td id="G:0" onclick="clicked(this.id, event);" class="black"> &nbsp; </td>
+			      <td id="H:0" onclick="clicked(this.id, event);" class="red"> &nbsp; </td>
+			   </tr>
+			   <tr>
+			      <td id="A:1" onclick="clicked(this.id, event);" class="red"> &nbsp; </td>
+			      <td id="B:1" onclick="clicked(this.id, event);" class="black"> &nbsp; </td>
+			      <td id="C:1" onclick="clicked(this.id, event);" class="red"> &nbsp; </td>
+			      <td id="D:1" onclick="clicked(this.id, event);" class="black"> &nbsp; </td>
+			      <td id="E:1" onclick="clicked(this.id, event);" class="red"> &nbsp; </td>
+			      <td id="F:1" onclick="clicked(this.id, event);" class="black"> &nbsp; </td>
+			      <td id="G:1" onclick="clicked(this.id, event);" class="red"> &nbsp; </td>
+			      <td id="H:1" onclick="clicked(this.id, event);" class="black"> &nbsp; </td>
+			   </tr>
+			   <tr>
+			      <td id="A:2" onclick="clicked(this.id, event);" class="black"> &nbsp; </td>
+			      <td id="B:2" onclick="clicked(this.id, event);" class="red"> &nbsp; </td>
+			      <td id="C:2" onclick="clicked(this.id, event);" class="black"> &nbsp; </td>
+			      <td id="D:2" onclick="clicked(this.id, event);" class="red"> &nbsp; </td>
+			      <td id="E:2" onclick="clicked(this.id, event);" class="black"> &nbsp; </td>
+			      <td id="F:2" onclick="clicked(this.id, event);" class="red"> &nbsp; </td>
+			      <td id="G:2" onclick="clicked(this.id, event);" class="black"> &nbsp; </td>
+			      <td id="H:2" onclick="clicked(this.id, event);" class="red"> &nbsp; </td>
+			   </tr>
+			   <tr>
+			      <td id="A:3" onclick="clicked(this.id, event);" class="red"> &nbsp; </td>
+			      <td id="B:3" onclick="clicked(this.id, event);" class="black"> &nbsp; </td>
+			      <td id="C:3" onclick="clicked(this.id, event);" class="red"> &nbsp; </td>
+			      <td id="D:3" onclick="clicked(this.id, event);" class="black"> &nbsp; </td>
+			      <td id="E:3" onclick="clicked(this.id, event);" class="red"> &nbsp; </td>
+			      <td id="F:3" onclick="clicked(this.id, event);" class="black"> &nbsp; </td>
+			      <td id="G:3" onclick="clicked(this.id, event);" class="red"> &nbsp; </td>
+			      <td id="H:3" onclick="clicked(this.id, event);" class="black"> &nbsp; </td>
+			   </tr>
+			   <tr>
+			      <td id="A:4" onclick="clicked(this.id, event);" class="black"> &nbsp; </td>
+			      <td id="B:4" onclick="clicked(this.id, event);" class="red"> &nbsp; </td>
+			      <td id="C:4" onclick="clicked(this.id, event);" class="black"> &nbsp; </td>
+			      <td id="D:4" onclick="clicked(this.id, event);" class="red"> &nbsp; </td>
+			      <td id="E:4" onclick="clicked(this.id, event);" class="black"> &nbsp; </td>
+			      <td id="F:4" onclick="clicked(this.id, event);" class="red"> &nbsp; </td>
+			      <td id="G:4" onclick="clicked(this.id, event);" class="black"> &nbsp; </td>
+			      <td id="H:4" onclick="clicked(this.id, event);" class="red"> &nbsp; </td>
+			   </tr>
+			   <tr>
+			      <td id="A:5" onclick="clicked(this.id, event);" class="red"> &nbsp; </td>
+			      <td id="B:5" onclick="clicked(this.id, event);" class="black"> &nbsp; </td>
+			      <td id="C:5" onclick="clicked(this.id, event);" class="red"> &nbsp; </td>
+			      <td id="D:5" onclick="clicked(this.id, event);" class="black"> &nbsp; </td>
+			      <td id="E:5" onclick="clicked(this.id, event);" class="red"> &nbsp; </td>
+			      <td id="F:5" onclick="clicked(this.id, event);" class="black"> &nbsp; </td>
+			      <td id="G:5" onclick="clicked(this.id, event);" class="red"> &nbsp; </td>
+			      <td id="H:5" onclick="clicked(this.id, event);" class="black"> &nbsp; </td>
+			   </tr>
+			   <tr>
+			      <td id="A:6" onclick="clicked(this.id, event);" class="black"> &nbsp; </td>
+			      <td id="B:6" onclick="clicked(this.id, event);" class="red"> &nbsp; </td>
+			      <td id="C:6" onclick="clicked(this.id, event);" class="black"> &nbsp; </td>
+			      <td id="D:6" onclick="clicked(this.id, event);" class="red"> &nbsp; </td>
+			      <td id="E:6" onclick="clicked(this.id, event);" class="black"> &nbsp; </td>
+			      <td id="F:6" onclick="clicked(this.id, event);" class="red"> &nbsp; </td>
+			      <td id="G:6" onclick="clicked(this.id, event);" class="black"> &nbsp; </td>
+			      <td id="H:6" onclick="clicked(this.id, event);" class="red"> &nbsp; </td>
+			   </tr>
+            <tr>
+               <td id="A:7" onclick="clicked(this.id, event);" class="red"> &nbsp; </td>
+               <td id="B:7" onclick="clicked(this.id, event);" class="black"> &nbsp; </td>
+               <td id="C:7" onclick="clicked(this.id, event);" class="red"> &nbsp; </td>
+               <td id="D:7" onclick="clicked(this.id, event);" class="black"> &nbsp; </td>
+               <td id="E:7" onclick="clicked(this.id, event);" class="red"> &nbsp; </td>
+               <td id="F:7" onclick="clicked(this.id, event);" class="black"> &nbsp; </td>
+               <td id="G:7" onclick="clicked(this.id, event);" class="red"> &nbsp; </td>
+               <td id="H:7" onclick="clicked(this.id, event);" class="black"> &nbsp; </td>
+            </tr>
+		   </table>
+      </td>
+   </tr>
+</table>
+</body>
+</html>
