@@ -1,5 +1,7 @@
-package org.tjug.chessweb.rest;
-
+package org.tjug.chess.rest;
+//
+//  This class represents a REST access point for the Chess game.
+//
 import java.util.Set;
 
 import javax.ws.rs.GET;
@@ -8,16 +10,22 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.tjug.chess.Controller;
-import org.tjug.chessweb.push.MoveSender;
+import org.tjug.chess.game.Controller;
 
 @Path("/chess/")
 public class Chess {
 	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("tournament")
+	public String turnament(){
+		return "";
+	}
+	
+	@GET
 	@Produces(MediaType.TEXT_PLAIN)
 	@Path("makeMove/{gameId}/{move}/")
 	public String makeMove(@PathParam("gameId") String gameId, @PathParam("move") String move){
-		MoveSender.getInstance().send(gameId, move);
+		//MoveSender.getInstance().send(gameId, move);
 		
 		return Controller.instance.getGame(gameId).makeMove(move);
 	}
@@ -40,7 +48,13 @@ public class Chess {
 	@Produces(MediaType.TEXT_PLAIN)
 	@Path("redrawGame/{gameId}/")
 	public String redrawGame(@PathParam("gameId") String gameId){
-		return Controller.instance.getGame(gameId).redrawGame();
+		String board = "";
+		try{
+			board = Controller.instance.getGame(gameId).redrawGame();
+		}catch (Throwable th){
+			System.out.println("Error getting game: " + gameId);
+		}
+		return board;
 	}
 	
 	@GET 
@@ -48,6 +62,25 @@ public class Chess {
 	@Path("games/")
 	public String getGames(){
 		Set<String> gameIds = Controller.instance.getGames();
+		StringBuffer sb = new StringBuffer();
+		boolean once = true;
+		for (String id: gameIds){
+			if (once){
+				sb.append(id);
+				once = false;
+			}else{
+				sb.append("|" + id);
+			}
+		}
+		
+		return sb.toString();
+	}
+	
+	@GET 
+	@Produces(MediaType.TEXT_PLAIN)
+	@Path("moves/{gameId}/")
+	public String getMoves(@PathParam("gameId") String gameId){
+		Set<String> gameIds = Controller.instance.getMoves(gameId);
 		StringBuffer sb = new StringBuffer();
 		
 		for (String id: gameIds){
@@ -57,6 +90,11 @@ public class Chess {
 		
 		return sb.toString();
 	}
-	
 
+	@GET 
+	@Produces(MediaType.TEXT_PLAIN)
+	@Path("activePlayer/{gameId}/")
+	public String activePlayer(@PathParam("gameId") String gameId){
+		return Controller.instance.getActivePlayer(gameId);
+	}
 }

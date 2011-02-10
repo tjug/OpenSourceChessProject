@@ -1,4 +1,4 @@
-package org.tjug.chessweb.push;
+package org.tjug.chess.push;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -18,9 +18,11 @@ public class Moves extends HttpServlet implements CometProcessor {
 	private static final long serialVersionUID = 1L;
 
 	private MoveSender sender;
+	private static final int ONE_HOUR = 60*60*1000;
 
 	@Override
 	public void destroy() {
+		System.out.println("Destroying Moves.");
 		sender.stop();
 		sender = null;
 	}
@@ -39,7 +41,7 @@ public class Moves extends HttpServlet implements CometProcessor {
         HttpServletResponse response = event.getHttpServletResponse();
 
           if (event.getEventType() == CometEvent.EventType.BEGIN) {
-        	  event.setTimeout(60*60*1000);
+        	  event.setTimeout(ONE_HOUR);
         	  String html = request.getParameter("html");
         	  if("on".equals(html)){
 	        	  sender.addConnection(response);

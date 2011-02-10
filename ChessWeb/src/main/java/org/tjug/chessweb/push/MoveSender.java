@@ -1,11 +1,11 @@
-package org.tjug.chessweb.push;
+package org.tjug.chess.push;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import javax.servlet.ServletResponse;
 
@@ -20,23 +20,19 @@ public class MoveSender implements Runnable{
 	
 	protected boolean running = true;
 	protected final List<String> messages = new ArrayList<String>();
-	private Set<ServletResponse> connections = new HashSet<ServletResponse>();
+	private ConcurrentMap<Long, ServletResponse> connections = new ConcurrentHashMap<Long, ServletResponse>();
 	private boolean newMove = false;
 	
 	void addConnection(ServletResponse connection){
 		synchronized (connections) {
-			if (!connections.contains(connection)){
 				System.out.println("Adding connection." + connection + "\n count " + connections.size());
-				connections.add(connection);
-			}
+				connections.put(Long.valueOf(System.currentTimeMillis()), connection);
 		}
 	}
 	
 	void removeConnection(ServletResponse connection){
-	    if (connections.contains(connection)){
 			System.out.println("Removing connection." + connection);
 	    	connections.remove(connection);
-	    }
 	}
 	
 	public void stop(){
@@ -75,13 +71,14 @@ public class MoveSender implements Runnable{
 	          }
 	          
 			  synchronized(connections){
-		          for (ServletResponse connection: connections){
+				  System.out.println("there are "+connections.size() + " connections");
+		          for (ServletResponse connection: connections.values()){
+		        	  System.out.println();
 			          writer = connection.getWriter();
 			          writer.println(sb.toString());
+			          connection.flushBuffer();
 		          }
-				  connections.clear();
 			  }
-			  
 			  
 	       } catch (IOException e) {
 	    	   throw new RuntimeException(e.getMessage());

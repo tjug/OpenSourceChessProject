@@ -1,0 +1,35 @@
+@CHARSET "UTF-8";
+.red {
+   font-family: sans-serif;
+   cursor: hand;
+   font-size: 8pt;
+   cursor: hand;
+   width: 64px;
+   height: 64px;
+   text-align: center;
+   vertical-align: middle;
+   background-color: #222222;
+   color: white;
+}
+
+.black {
+   font-family: sans-serif;
+   font-size: 8pt;
+   cursor: hand;
+   width: 64px;
+   height: 64px;
+   text-align: center;
+   vertical-align: middle;
+   background-color: #CCCCCC;
+   color: white;
+}
+
+.button {
+   width: 120px;
+   font-size: 8pt;
+}
+
+.text {
+   width: 80px;
+   font-size: 8pt;
+}

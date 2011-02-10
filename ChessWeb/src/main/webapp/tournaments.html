@@ -1,0 +1,150 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+   <title>ChessWeb TJUG</title>
+   <style type="text/css" title="currentStyle">
+      @import "./css/demo_page.css";
+      @import "./css/demo_table.css";
+      @import "./css/ui-lightness/jquery-ui-1.8.9.custom.css";
+      
+   </style>   
+
+   <script src="./js/jquery-1.5.js"></script>
+   <script src="./js/jquery-ui-1.8.9.js"></script>
+   <script src="./js/jquery.dataTables.min.js"></script>
+   
+   <script type="text/javascript" charset="utf-8">
+      $(document).ready(function() {
+         $('#tournaments').dataTable( {
+            "bDestroy": true,
+            "bProcessing": true,
+            "sAjaxSource": 'rest/TableData/tournaments/',
+           	"aoColumns": [
+						{ "sType": "string" },
+						{ "sType": "date" },
+						{ "sType": "string" }
+					]            
+         } );
+
+         $('#tournaments tr').live('dblclick', function() {
+        	    showGames();
+          } );
+      });
+      
+      function showGames(){
+          $('#divTournaments').css('display', 'none');
+          $('#divGames').css('display', 'block');
+            
+          
+          $('#games').dataTable( {
+        	     "bDestroy": true,
+              "bProcessing": true,
+              "sAjaxSource": 'rest/TableData/games/tournamentId_one',
+              "aoColumns": [
+                    { "sType": "string" },
+                    { "sType": "string" },
+                    { "sType": "date" }
+                 ]
+          }
+      );
+          
+          $('#games td').live('dblclick', function(event) {
+        	     showDlgPlayerProfile(this.textContent);
+           } );
+          
+    	  
+      }
+      
+      function showTournaments(){
+    	  $('#divGames').css('display', 'none');
+    	  $('#divTournaments').css('display', 'block');
+          
+      }
+   </script>   
+</head>
+<body>
+<input type="button" value="Tournaments" onclick="showTournaments()" />
+   <div id="divTournaments" style="display: block;">
+      <table cellpadding="0" cellspacing="0" border="0" class="display" id="tournaments">
+         <thead>
+            <tr>
+               <th width="20%"> Tournament </th>
+               <th width="25%"> Date </th>
+               <th width="15%"> Place </th>
+            </tr>
+         </thead>
+         <tbody></tbody>
+         <tfoot>
+            <tr>
+               <th> Tournament </th>
+               <th> Date </th>
+               <th> Place </th>
+            </tr>
+         </tfoot>
+      </table>
+   </div>
+   <div id="divGames" style="display: none; ">
+      <table cellpadding="0" cellspacing="0" border="0" class="display" id="games">
+         <thead>
+            <tr>
+               <th width="20%">Opponent One</th>
+               <th width="25%">Opponent Two</th>
+               <th width="15%">Time</th>
+            </tr>
+         </thead>
+         <tbody></tbody>
+         <tfoot>
+            <tr>
+               <th>Opponent One</th>
+               <th>Opponent Two</th>
+               <th>Time</th>
+            </tr>
+         </tfoot>
+      </table>
+   </div>
+   
+   <!--  DIALOG: Player Profile -->
+   <div id="dlgPlayerProfile" title="Player Profile">
+     <table cellpadding="0" cellspacing="0">
+        <tr><td> Name: </td><td><div id="playerName"></div></td></tr>
+       <tr><td> Club Ranking: </td><td><div id="playerClubRanking"></div></td></tr>
+       <tr><td> Total Wins/Losses: </td><td><div id="playerWinsLosses"></div></td></tr>
+     </table>
+  </div>
+     <script>
+	     function showDlgPlayerProfile(player){
+	         //  get the currently running games
+	          $.ajax({
+	                url: "rest/TableData/player/"+player+"/",
+	                success: function(player){
+	                      $("#playerName").html(player.name);
+	                      $("#playerClubRanking").html(player.clubRanking);
+	                      $("#playerWinsLosses").html(player.wins +"/" + player.losses);
+	                      
+	                      // show the dialog box
+	                      $('#dlgPlayerProfile').dialog('open');
+	                      
+	                   }
+	          });
+	             
+	          return;
+	       }
+	     
+	     $(document).ready(function(){
+	
+	         $("#dlgPlayerProfile").dialog({ 
+	             autoOpen: false,
+	             modal: true,
+	             buttons: {
+	                 "Okay" : function(){
+	                     $(this).dialog("close");
+	                 }
+	             }
+	           });	
+	     });
+
+     </script>
+   
+</body>
+</html>
