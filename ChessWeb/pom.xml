@@ -97,11 +97,14 @@
             <groupId>com.sun.grizzly</groupId>
             <artifactId>grizzly-comet</artifactId>
             <version>1.9.18d</version>
+            <scope>provided</scope>
+            
         </dependency>
         <dependency>
             <groupId>org.apache.tomcat</groupId>
             <artifactId>tomcat-catalina</artifactId>
             <version>7.0.2</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
     <build>
