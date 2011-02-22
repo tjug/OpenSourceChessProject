@@ -24,6 +24,13 @@
    color: white;
 }
 
+.boardLabel{
+	text-align: center;
+	background-color: #777777;
+	color: #999999;
+	font-weight: bolder;
+	
+}	
 .button {
    width: 120px;
    font-size: 8pt;
