@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+   <head>
+   <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Tournament Page</title>
+   </head>
+   <body>
+     <script>
+      function makeRow(x, singleElimination){
+         // x is the number of enteries
+         var table = [];
+         var rowSpan = [];
+
+         var i=0;
+         var spanCount = 0;
+         while (i<x){
+            if (0==i){
+               table[i] = "<td rowspan='1'>sam</td>";
+               rowSpan[i] = 1;
+               i+=1;
+            }else{
+               var iTmp = i-1;
+               for (var j=0; j<iTmp; j++){  // this adds doubles the number of enteries
+                  table[i] = table[j];
+                  rowSpan[i] = rowSpan[j]*2;
+                  i+=1;
+               }
+               rowSpan[i] = rowSpan[j]*2;
+               if (singleElimination){
+                   table[i] = table[j]+"<td rowspan='"+rowSpan[i]+"'>sam</td>";
+               }else{
+                   table[i] = "<td rowspan='"+rowSpan[i]+"'>sam</td>"+table[j]+"<td rowspan='"+rowSpan[i]+"'>sam</td>";
+               }
+               i+=1;
+            }
+         }
+         
+         // make the table -
+         var line = "";
+         for (var i=0; i<table.length; i++) 
+            line = "<tr>"+table[i]+"</tr>" + line;
+         
+         // return the table -
+         return line;
+      }
+      
+      table = "<table border=on>" + makeRow(8, false) +"</table>";
+      document.write(table);
+
+     </script>
+   </body>
+</html>

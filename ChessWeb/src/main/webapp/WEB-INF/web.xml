@@ -10,6 +10,10 @@
     </init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>
+	<listener>
+	    <listener-class>org.tjug.chess.initialize.StartupListener</listener-class>
+	</listener>  
+  
   <servlet-mapping>
     <servlet-name>Jersey REST Service</servlet-name>
     <url-pattern>/rest/*</url-pattern>
