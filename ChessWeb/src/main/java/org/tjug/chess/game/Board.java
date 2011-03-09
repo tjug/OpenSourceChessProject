@@ -22,7 +22,7 @@ public class Board {
 		board = null;
 	}
 
-	void setPiece(Coordinate coord, ChessPiece chessPiece){
+	public void setPiece(Coordinate coord, ChessPiece chessPiece){
 		board[coord.getX()][coord.getY()] = chessPiece;
 	}
 	
@@ -36,8 +36,7 @@ public class Board {
 		else
 			return IChessPiece.Color.BLACK;
 	}
-	
-	void clearBoard(){
+	public void clearBoard(){
 		for(int y=0; y<8; y++){
 			for(int x=0; x<8; x++){
 				board[x][y] = null;
@@ -45,7 +44,7 @@ public class Board {
 		}
 	}
 	
-	void initialize(){
+	public void initialize(){
 		clearBoard();
 		setup(IChessPiece.Color.WHITE);
 		setup(IChessPiece.Color.BLACK);
@@ -92,7 +91,7 @@ public class Board {
 		}
 	}
 
-	IChessPiece getPiece(Coordinate coordinate){
+	public IChessPiece getPiece(Coordinate coordinate){
 		return board[coordinate.getX()][coordinate.getY()];
 	}
 	
