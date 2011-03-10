@@ -34,6 +34,9 @@ public class BoardTest {
 
 		IChessPiece rook = board.getPiece(coordinate);
 		Assert.assertTrue((rook.toString().equalsIgnoreCase("W:Rook")));
+		coordinate = new Coordinate("A:6");
+		IChessPiece pawn = board.getPiece(coordinate);
+		Assert.assertTrue((pawn.toString().equalsIgnoreCase("W:Pawn")));
 	}
 
 }
