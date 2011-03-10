@@ -19,6 +19,10 @@ public class GameTest {
 	public void tearDown() throws Exception {
 	}
 
-	
+	@Test
+	public void testGetOpponent1() {
+		game = new Game();
+		
+	}
 
 }
