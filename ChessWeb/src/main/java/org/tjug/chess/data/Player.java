@@ -7,11 +7,19 @@ package org.tjug.chess.data;
 //    both JSON (JavaScript Object Notation) and XML.
 //
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement
+//@Entity(name="PlayerEntity")
+@XmlRootElement(name="Player")
 public class Player {
 	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 	private String name;
 	private String clubRanking;
 	private String wins;
