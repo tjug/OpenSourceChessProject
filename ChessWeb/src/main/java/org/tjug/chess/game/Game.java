@@ -9,7 +9,7 @@ public class Game {
 	private Board board;
 	private Set<String> moves;
 	
-	Game(){
+	public Game(){
 		board = new Board();
 		moves = new HashSet<String>();
 	}
