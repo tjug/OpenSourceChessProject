@@ -59,7 +59,7 @@ public class Board {
 		try{
 			Move move = new Move(strMove);
 			IChessPiece piece = getPiece(move.getOrigin());
-			System.out.println("Piece : " + piece);
+			log("Piece : " + piece);
 			IChessPiece removedPiece = null;
 			
 			// test driven development

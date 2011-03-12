@@ -73,7 +73,6 @@ public class MoveSender implements Runnable{
 			  synchronized(connections){
 				  System.out.println("there are "+connections.size() + " connections");
 		          for (ServletResponse connection: connections.values()){
-		        	  System.out.println();
 			          writer = connection.getWriter();
 			          writer.println(sb.toString());
 			          connection.flushBuffer();

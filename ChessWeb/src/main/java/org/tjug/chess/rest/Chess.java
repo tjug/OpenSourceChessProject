@@ -10,6 +10,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import org.tjug.chess.data.ChessDAO;
+import org.tjug.chess.data.Tournament;
 import org.tjug.chess.game.Controller;
 
 @Path("/chess/")
@@ -96,5 +98,19 @@ public class Chess {
 	@Path("activePlayer/{gameId}/")
 	public String activePlayer(@PathParam("gameId") String gameId){
 		return Controller.instance.getActivePlayer(gameId);
+	}
+
+	@GET
+	@Produces("application/json")
+	@Path("redrawTournament/{tournamentId}/")
+	public Tournament redrawTournament(@PathParam("tournamentId") String tournamentId){
+		Tournament tournament = null;
+		try{
+			tournament = ChessDAO.instance.getTournament(tournamentId);
+		}catch (Throwable th){
+			System.out.println("Error getting Tournament: " + tournamentId);
+			th.printStackTrace();
+		}
+		return tournament;
 	}
 }

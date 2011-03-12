@@ -29,10 +29,10 @@ public class Moves extends HttpServlet implements CometProcessor {
 
 	@Override
 	public void init() throws ServletException {
-		sender = MoveSender.getInstance();
-		Thread senderThread = new Thread(sender, "MoveSender[" + getServletContext().getContextPath() + "]");
-		senderThread.setDaemon(true);
-		senderThread.start();
+		//sender = MoveSender.getInstance();
+		//Thread senderThread = new Thread(sender, "MoveSender[" + getServletContext().getContextPath() + "]");
+		//senderThread.setDaemon(true);
+		//senderThread.start();
 	}
 
 	@Override

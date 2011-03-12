@@ -1,7 +1,11 @@
 package org.tjug.chess.initialize;
 
+import javax.persistence.EntityManager;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+
+import org.tjug.chess.data.Database;
+import org.tjug.chess.data.Player;
 
 public class StartupListener implements ServletContextListener{
 	@Override
@@ -21,6 +25,22 @@ public class StartupListener implements ServletContextListener{
 		System.out.println("*  performed from here.                                             *");
 		System.out.println("*                                                                   *");
 		System.out.println("*********************************************************************");
+		String path = event.getServletContext().getRealPath("");
+		Database.instance.initialize(path);
+		/*
+		EntityManager em = Database.instance.getEntityManager();
+		
+	    em.getTransaction().begin();
+		Player player = new Player();
+		player.setName("Andrew");
+		player.setClubRanking("500");
+		em.persist(player);
+		em.getTransaction().commit();
+		
+		em.close();
+		em = null;
+		*/
+		
 	}
 	
 	@Override
@@ -39,5 +59,7 @@ public class StartupListener implements ServletContextListener{
 		System.out.println("*  from here.                                                       *");
 		System.out.println("*                                                                   *");
 		System.out.println("*********************************************************************");
+
+		Database.instance.shutdown();
 	}
 }

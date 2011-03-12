@@ -1,52 +1,78 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
    <head>
-   <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-   <title>Tournament Page</title>
-   </head>
-   <body>
-     <script>
-      function makeRow(x, singleElimination){
-         // x is the number of enteries
-         var table = [];
-         var rowSpan = [];
-
-         var i=0;
-         var spanCount = 0;
-         while (i<x){
-            if (0==i){
-               table[i] = "<td rowspan='1'>sam</td>";
-               rowSpan[i] = 1;
-               i+=1;
-            }else{
-               var iTmp = i-1;
-               for (var j=0; j<iTmp; j++){  // this adds doubles the number of enteries
-                  table[i] = table[j];
-                  rowSpan[i] = rowSpan[j]*2;
-                  i+=1;
-               }
-               rowSpan[i] = rowSpan[j]*2;
-               if (singleElimination){
-                   table[i] = table[j]+"<td rowspan='"+rowSpan[i]+"'>sam</td>";
-               }else{
-                   table[i] = "<td rowspan='"+rowSpan[i]+"'>sam</td>"+table[j]+"<td rowspan='"+rowSpan[i]+"'>sam</td>";
-               }
-               i+=1;
+	   <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	   <title>Tournament Page</title>
+      <script src="./js/ChessWeb-EliminationTournament.js"></script>
+      <script src="./js/jquery-1.5.js"></script>
+      <script src="./js/jquery-ui-1.8.9.js"></script>
+      <script src="./js/jquery.dataTables.min.js"></script>
+	   <style type="text/css" title="currentStyle">
+         @import "./css/ChessWeb-EliminationTournament.css";
+         @import "./css/demo_page.css";
+	      @import "./css/demo_table.css";
+	      @import "./css/ui-lightness/jquery-ui-1.8.9.custom.css";
+	   </style>
+	   <script>
+	     $(document).ready(function(){
+	    	  redrawTournament();
+	          
+           //
+           //  create new game dialog
+           $("#dlgWatchGame").dialog({ 
+             autoOpen: false,
+             modal: true,
+             buttons: {
+                 "Okay" : function(){
+                    $(this).dialog("close");
+                }
             }
-         }
-         
-         // make the table -
-         var line = "";
-         for (var i=0; i<table.length; i++) 
-            line = "<tr>"+table[i]+"</tr>" + line;
-         
-         // return the table -
-         return line;
-      }
-      
-      table = "<table border=on>" + makeRow(8, false) +"</table>";
-      document.write(table);
-
-     </script>
+          });
+	     });
+	   </script>
+	   
+	</head>
+   <body>
+      <div style="text-align: center;">
+	      <div style="width: 100%, font-size: +2; font-weight: bolder; text-align: center;">Chess Tournament</div>
+	      <div id="divTournament"></div>
+	      <div style="width:400px;">
+	        The screen will refresh every 3 seconds with simulated updates. Once the table
+	        is fully populated it will start again.
+	      </div>
+      </div>
+      <div style="display: none;">
+	      Number <input type="text" id="gameNumber" value="" />
+	      Looser <input type="text" id="looser" value="" />
+	      Winner <input type="text" id="winner" value="" />
+	      <input type="button" onclick="clicking()" value="run" />
+	      <input type="button" onclick="redrawTournament()" value="draw" />
+	     
+	     <script>
+	      function clicking(){	  
+	        var gameNumber = $('#gameNumber').val();
+	        var winner = $('#winner').val();
+	        var looser = $('#looser').val();
+	   	  
+	    	  var valueId = '#lose_'+gameNumber;
+	    	  $(valueId).html(looser);
+	        valueId = '#win_'+gameNumber;
+	    	  $(valueId).html(winner);
+	      }
+	     </script>
+     </div>
+     
+     
+	   <!--  DIALOG: join game -->
+	   <div id="dlgWatchGame" title="Watching Game">
+	     <table cellpadding="0" cellspacing="0">
+	        <tr>
+	           <td><div id="boardPlacement"> Watching game <div id="watchingGameId"></div></div></td>
+	        </tr>
+	     </table>
+	   </div>     
+	     
+     
+     
    </body>
 </html>

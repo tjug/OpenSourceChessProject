@@ -56,7 +56,7 @@ public class TableDataSource {
 			}else{
 				sb.append(",");
 			}
-			sb.append("[\""+game.getOpponent1()+"\",\""+game.getOpponent2()+"\",\""+dateFormat.format(game.getStartTime())+"\"]");
+			sb.append("[\""+game.getPlayer1()+"\",\""+game.getPlayer2()+"\",\""+dateFormat.format(game.getStartTime())+"\"]");
 		}
 		
 		return wrapDataForTableControl(sb.toString());
