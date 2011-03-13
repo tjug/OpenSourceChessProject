@@ -210,7 +210,7 @@ function asyncGameMessage(strUrl){
 function drawBoard(){
 	var board = "<table cellspacing=\"0\" cellpadding=\"0\">";
 	var color = "black";
-	var row = 1;
+	var row = 8;
     board += "<tr><td class=\"boardLabel\">&nbsp;</td><td class=\"boardLabel\">A</td><td class=\"boardLabel\">B</td><td class=\"boardLabel\">C</td><td class=\"boardLabel\">B</td><td class=\"boardLabel\">E</td><td class=\"boardLabel\">F</td><td class=\"boardLabel\">G</td><td class=\"boardLabel\">H</td><td class=\"boardLabel\">&nbsp;</td></tr>";
 	for (var y=0; y<8; y++){
 		board += "<tr><td class=\"boardLabel\">&nbsp;"+row+"&nbsp;</td>";
@@ -228,7 +228,7 @@ function drawBoard(){
 			color = "black";
 		}
 		board += "<td class=\"boardLabel\">&nbsp;"+row+"&nbsp;</td></tr>";
-		row++;
+		row--;
 	}
     board += "<tr><td class=\"boardLabel\">&nbsp;</td><td class=\"boardLabel\">A</td><td class=\"boardLabel\">B</td><td class=\"boardLabel\">C</td><td class=\"boardLabel\">B</td><td class=\"boardLabel\">E</td><td class=\"boardLabel\">F</td><td class=\"boardLabel\">G</td><td class=\"boardLabel\">H</td><td class=\"boardLabel\">&nbsp;</td></tr>";
 	board += "</table>";
