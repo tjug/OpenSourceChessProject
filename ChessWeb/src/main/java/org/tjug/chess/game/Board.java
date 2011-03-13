@@ -181,7 +181,7 @@ public class Board {
 				String piece;
 				piece = (null==board[i][j])? "" : board[i][j].toString();
 				piece = " | " + piece + "            ".substring(0, 10-piece.length());
-				piece = (0==j ? Integer.toString(i) : " ")+ piece;
+				piece = (0==j ? Integer.toString(8-i) : " ")+ piece;
 				sb2.append(piece);
 			}
 			sb2.append("|\n");
