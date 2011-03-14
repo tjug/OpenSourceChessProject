@@ -21,15 +21,15 @@ public class Player {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String name;
-	private String clubRanking;
+	private String ranking;
 	private String wins;
 	private String losses;
 	
 	public Player(){}
 	
-	public Player(String name, String clubRanking, String wins, String losses){
+	public Player(String name, String ranking, String wins, String losses){
 		setName(name);
-		setClubRanking(clubRanking);
+		setRanking(ranking);
 		setWins(wins);
 		setLosses(losses);
 		
@@ -43,12 +43,12 @@ public class Player {
 		return name;
 	}
 
-	public void setClubRanking(String clubRanking) {
-		this.clubRanking = clubRanking;
+	public void setRanking(String ranking) {
+		this.ranking = ranking;
 	}
 
-	public String getClubRanking() {
-		return clubRanking;
+	public String getRanking() {
+		return ranking;
 	}
 
 	public void setWins(String wins) {
