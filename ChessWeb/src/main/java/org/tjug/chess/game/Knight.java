@@ -25,6 +25,8 @@ public class Knight extends ChessPiece {
 		if ((null!=piece) && (piece.getColor()==getColor())){
 			throw new RuntimeException(INVALID_MOVE+"Knight. Space Occupied. " + move);
 		}
+		
+		if (neverMoved) neverMoved = false;
 	}
 
 	public String toString(){
