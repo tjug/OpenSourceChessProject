@@ -152,8 +152,9 @@ public class Board {
 		board[file][0] = new Rook(color);
 		board[file][1] = new Knight(color); 
 		board[file][2] = new Bishop(color); 
-		board[file][3] = new King(color); 
-		board[file][4] = new Queen(color); 
+             
+                board[file][3] = new Queen(color); 
+		board[file][4] = new King(color); 
 		board[file][5] = new Bishop(color); 
 		board[file][6] = new Knight(color); 
 		board[file][7] = new Rook(color);
