@@ -9,6 +9,7 @@
    text-align: center;
    vertical-align: middle;
    background-color: #404041;
+   background-image: url('../images/dark.jpeg');   
    color: white;
 }
 
@@ -21,6 +22,7 @@
    text-align: center;
    vertical-align: middle;
    background-color: #a0a0a0;
+   background-image: url('../images/light.jpeg');
    color: white;
 }
 
