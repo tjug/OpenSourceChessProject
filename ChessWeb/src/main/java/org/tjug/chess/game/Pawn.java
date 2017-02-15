@@ -45,6 +45,7 @@ public class Pawn extends ChessPiece {
 		}
 		
 		moved = true;
+		if (neverMoved) neverMoved = false;
 	}
 	
 	public String toString(){

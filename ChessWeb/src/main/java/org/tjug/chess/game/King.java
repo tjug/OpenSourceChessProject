@@ -11,7 +11,11 @@ public class King extends ChessPiece {
 
 	@Override
 	public void move(Move move, Board board) {
-		throw new RuntimeException("No moves implemented for King.");
+		
+		if (neverMoved) neverMoved = false;
+		
+		throw new RuntimeException("No moves implemented for King.");		
+		
 	}
 	
 	public String toString(){

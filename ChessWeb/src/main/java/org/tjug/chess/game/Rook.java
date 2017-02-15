@@ -28,7 +28,7 @@ public class Rook extends ChessPiece {
 				throw new RuntimeException(IChessPiece.INVALID_MOVE + "Rook.  " + IChessPiece.DESTINATION_NOT_EMPTY);
 			}
 		}
-		
+		if (neverMoved) neverMoved = false;
 		return;
 	}
 	
